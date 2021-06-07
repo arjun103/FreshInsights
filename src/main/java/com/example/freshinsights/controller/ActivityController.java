@@ -5,6 +5,7 @@ import com.example.freshinsights.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @RestController
@@ -25,13 +26,13 @@ public class ActivityController
     }
 
     @GetMapping("/activity/{id}")
-    Activity findActivityByID(@PathVariable int id)
+    Activity findActivityByID(@PathVariable BigInteger id)
     {
         return activityService.findActivityByID(id);
     }
 
     @DeleteMapping("/activity/{id}")
-    void deleteActivity(@PathVariable  int id)
+    void deleteActivity(@PathVariable  BigInteger id)
     {
         activityService.deleteActivity(id);
     }

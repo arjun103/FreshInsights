@@ -31,11 +31,9 @@ public class Activity
     String mailId;
 
     @Column(name = "activityStatus")
-    @Value("waiting for review")
     String activityStatus;
 
     @Column(name = "stepsCompleted")
-    @Value("0")
     int stepsCompleted;
 
     @Column(name = "createdAt")
@@ -56,5 +54,13 @@ public class Activity
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
         updatedAt = LocalDateTime.now();
         dtf.format(updatedAt);
+    }
+
+    public void setActivityStatus() {
+        activityStatus = "waiting for review";
+    }
+
+    public void setStepsCompleted() {
+        stepsCompleted = 0;
     }
 }

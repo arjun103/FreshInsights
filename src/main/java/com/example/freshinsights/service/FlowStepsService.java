@@ -5,6 +5,7 @@ import com.example.freshinsights.repository.FlowStepsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Service
@@ -16,13 +17,13 @@ public class FlowStepsService
     public void createFlowSteps(FlowSteps flowSteps) {
         flowStepsRepository.save(flowSteps);}
 
-    public void deleteFlowSteps(int id) {
+    public void deleteFlowSteps(BigInteger id) {
         flowStepsRepository.deleteById(id);
     }
 
     public List<FlowSteps> findAllFlowSteps() {return (List<FlowSteps>) flowStepsRepository.findAll();
     }
 
-    public FlowSteps findFlowStepsByID(int id) {return flowStepsRepository.findById(id).get();
+    public FlowSteps findFlowStepsByID(BigInteger id) {return flowStepsRepository.findById(id).get();
     }
 }

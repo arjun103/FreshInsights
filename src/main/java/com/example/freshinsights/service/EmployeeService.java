@@ -5,6 +5,7 @@ import com.example.freshinsights.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Service
@@ -25,12 +26,12 @@ public class EmployeeService
         return (List<Employee>) employeeRepository.findAll();
     }
 
-    public Employee findEmployeeByID(int id)
+    public Employee findEmployeeByID(BigInteger id)
     {
         return employeeRepository.findById(id).get();
     }
 
-    public void deleteEmployee(int id)
+    public void deleteEmployee(BigInteger id)
     {
         employeeRepository.deleteById(id);
     }

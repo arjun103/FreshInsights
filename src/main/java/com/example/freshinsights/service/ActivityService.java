@@ -5,6 +5,7 @@ import com.example.freshinsights.repository.ActivityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @Service
@@ -15,18 +16,20 @@ public class ActivityService
 
     public void createActivity(Activity activity)
     {
+        activity.setActivityStatus();
+        activity.setStepsCompleted();
         activity.setCreatedAt();
         activity.setUpdatedAt();
         activityRepository.save(activity);
     }
 
-    public void deleteActivity(int id) {
+    public void deleteActivity(BigInteger id) {
         activityRepository.deleteById(id);
     }
 
     public List<Activity> findAllActivities() {return (List<Activity>) activityRepository.findAll();
     }
 
-    public Activity findActivityByID(int id) {return activityRepository.findById(id).get();
+    public Activity findActivityByID(BigInteger id) {return activityRepository.findById(id).get();
     }
 }

@@ -5,6 +5,7 @@ import com.example.freshinsights.service.FlowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @RestController
@@ -25,12 +26,12 @@ public class FlowController
     }
 
     @GetMapping("/flow/{id}")
-    Flow findFlowByID(@PathVariable int id)
+    Flow findFlowByID(@PathVariable BigInteger id)
     {
         return flowService.findFlowByID(id);
     }
 
     @DeleteMapping("/flow/{id}")
-    void deleteFlow(@PathVariable  int id) { flowService.deleteFlow(id); }
+    void deleteFlow(@PathVariable  BigInteger id) { flowService.deleteFlow(id); }
 
 }

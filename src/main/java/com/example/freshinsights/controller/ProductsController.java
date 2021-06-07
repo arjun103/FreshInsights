@@ -5,6 +5,7 @@ import com.example.freshinsights.service.ProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @RestController
@@ -24,13 +25,13 @@ public class ProductsController
     }
 
     @GetMapping("/products/{id}")
-    Products findProductByID(@PathVariable int id)
+    Products findProductByID(@PathVariable BigInteger id)
     {
         return productsService.findProductByID(id);
     }
 
     @DeleteMapping("/products/{id}")
-    void deleteProduct(@PathVariable  int id)
+    void deleteProduct(@PathVariable  BigInteger id)
     {
         productsService.deleteProduct(id);
     }

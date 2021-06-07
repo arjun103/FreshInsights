@@ -14,7 +14,7 @@ public class FlowSteps
 {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    int id;
+    BigInteger id;
 
     @Column(name = "flowId")
     BigInteger flowId;

@@ -5,6 +5,7 @@ import com.example.freshinsights.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigInteger;
 import java.util.List;
 
 @RestController
@@ -27,14 +28,14 @@ public class EmployeeController
 
 
     @GetMapping("/employee/{id}")
-    Employee findEmployeeByID(@PathVariable int id)
+    Employee findEmployeeByID(@PathVariable BigInteger id)
     {
         return employeeService.findEmployeeByID(id);
     }
 
 
     @DeleteMapping("/employee/{id}")
-    void deleteEmployee(@PathVariable  int id)
+    void deleteEmployee(@PathVariable  BigInteger id)
     {
         employeeService.deleteEmployee(id);
     }
