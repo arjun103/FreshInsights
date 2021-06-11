@@ -2,6 +2,8 @@ package com.example.freshinsights.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import java.math.BigInteger;
@@ -49,5 +51,4 @@ public class Employee
         updatedAt = LocalDateTime.now();
         dtf.format(updatedAt);
     }
-
 }
