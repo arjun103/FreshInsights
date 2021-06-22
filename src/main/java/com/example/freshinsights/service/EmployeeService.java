@@ -24,6 +24,7 @@ public class EmployeeService
         employee.setCreatedAt();
         employee.setUpdatedAt();
         employeeRepository.save(employee);
+        //System.out.println("Employee created");
     }
 
     public List<Employee> findAllEmployees()

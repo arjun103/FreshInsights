@@ -1,15 +1,16 @@
 package com.example.freshinsights.model;
 
+import com.example.freshinsights.repository.FlowStepsRepository;
+import com.example.freshinsights.service.ActivityService;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.*;
 import java.math.BigInteger;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
+import java.util.*;
 
 @Getter
 @Setter
@@ -42,6 +43,9 @@ public class Activity
     @Column(name = "updatedAt")
     LocalDateTime updatedAt;
 
+    public Activity() {
+    }
+
     public void setCreatedAt()
     {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
@@ -56,11 +60,18 @@ public class Activity
         dtf.format(updatedAt);
     }
 
-    public void setActivityStatus() {
-        activityStatus = "waiting for review";
+    public void setActivityStatus(String activityStatus) {
+        this.activityStatus = activityStatus;
     }
 
-    public void setStepsCompleted() {
-        stepsCompleted = 0;
+    public String toString() {
+        final StringBuffer sb = new StringBuffer("Activity{");
+        sb.append("productId='").append(productId).append('\'');
+        sb.append(", flowId='").append(flowId).append('\'');
+        sb.append(", mailId='").append(mailId).append('\'');
+        sb.append(", activityStatus='").append(activityStatus).append('\'');
+        sb.append(", stepsCompleted='").append(stepsCompleted).append('\'');
+        sb.append('}');
+        return sb.toString();
     }
 }

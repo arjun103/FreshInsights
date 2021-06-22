@@ -1,5 +1,6 @@
 package com.example.freshinsights.controller;
 
+import com.example.freshinsights.model.FlowSteps;
 import com.example.freshinsights.model.Products;
 import com.example.freshinsights.service.ProductsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ public class ProductsController
     @Autowired
     ProductsService productsService;
 
-    @PostMapping("/products")
+    @PostMapping("/product")
     void createProduct(@RequestBody Products products){productsService.createProduct(products);}
 
     @GetMapping("/products")
@@ -24,15 +25,21 @@ public class ProductsController
         return productsService.findAllProducts();
     }
 
-    @GetMapping("/products/{id}")
+    @GetMapping("/product/{id}")
     Products findProductByID(@PathVariable BigInteger id)
     {
         return productsService.findProductByID(id);
     }
 
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("/product/{id}/delete")
     void deleteProduct(@PathVariable  BigInteger id)
     {
         productsService.deleteProduct(id);
+    }
+
+    @GetMapping("/product/productId/{productid}")
+    List<Products> findProductDeatilsUsingId(@PathVariable("productid") BigInteger productId)
+    {
+        return productsService.findProductDeatilsUsingId(productId);
     }
 }

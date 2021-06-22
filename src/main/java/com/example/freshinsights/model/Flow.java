@@ -27,4 +27,13 @@ public class Flow
     @Column(name = "productId")
     BigInteger productId;
 
+    @Override
+    public String toString() {
+        return "Flow{" +
+                "flowId=" + flowId +
+                ", flowDescription='" + flowDescription + '\'' +
+                ", totalSteps=" + totalSteps +
+                ", productId=" + productId +
+                '}';
+    }
 }

@@ -20,7 +20,7 @@ public class EmployeeController
     void createEmployee(@RequestBody Employee employee){employeeService.createEmployee(employee);}
 
 
-    @GetMapping("/employee")
+    @GetMapping("/employees")
     List<Employee> findAllEmployees()
     {
         return employeeService.findAllEmployees();
@@ -34,7 +34,7 @@ public class EmployeeController
     }
 
 
-    @DeleteMapping("/employee/{id}")
+    @DeleteMapping("/employee/{id}/delete")
     void deleteEmployee(@PathVariable  BigInteger id)
     {
         employeeService.deleteEmployee(id);

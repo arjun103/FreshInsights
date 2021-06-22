@@ -16,8 +16,8 @@ public class ActivityService
 
     public void createActivity(Activity activity)
     {
-        activity.setActivityStatus();
-        activity.setStepsCompleted();
+//        activity.setActivityStatus();
+//        activity.setStepsCompleted();
         activity.setCreatedAt();
         activity.setUpdatedAt();
         activityRepository.save(activity);
@@ -31,5 +31,12 @@ public class ActivityService
     }
 
     public Activity findActivityByID(BigInteger id) {return activityRepository.findById(id).get();
+    }
+
+    public List<Activity> findAllActivitiesByStatus(String status) {
+        for(Activity activity:(List<Activity>) activityRepository.findAllActivitiesByStatus(status)){
+            System.out.println(activity.toString());
+        }
+        return (List<Activity>) activityRepository.findAllActivitiesByStatus(status);
     }
 }

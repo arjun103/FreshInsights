@@ -26,4 +26,12 @@ public class FlowStepsService
 
     public FlowSteps findFlowStepsByID(BigInteger id) {return flowStepsRepository.findById(id).get();
     }
+
+    public List<FlowSteps> findFlowStepsDetailsUsingFlowId(BigInteger flowId) {
+        for(FlowSteps flowSteps:(List<FlowSteps>) flowStepsRepository.findFlowStepsDetailsUsingFlowId(flowId))
+        {
+            System.out.println(flowSteps.toString());
+        }
+        return (List<FlowSteps>) flowStepsRepository.findFlowStepsDetailsUsingFlowId(flowId);
+    }
 }

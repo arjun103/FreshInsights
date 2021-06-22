@@ -20,4 +20,11 @@ public class Products
     @Column(name = "productName")
     String productName;
 
+    @Override
+    public String toString() {
+        return "Products{" +
+                "productId=" + productId +
+                ", productName='" + productName + '\'' +
+                '}';
+    }
 }

@@ -1,6 +1,7 @@
 package com.example.freshinsights.controller;
 
 import com.example.freshinsights.model.Flow;
+import com.example.freshinsights.model.FlowSteps;
 import com.example.freshinsights.service.FlowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class FlowController
     void createFlow(@RequestBody Flow flow){
         flowService.createFlow(flow);}
 
-    @GetMapping("/flow")
+    @GetMapping("/flows")
     List<Flow> findAllFlows()
     {
         return flowService.findAllFlows();
@@ -31,7 +32,13 @@ public class FlowController
         return flowService.findFlowByID(id);
     }
 
-    @DeleteMapping("/flow/{id}")
+    @DeleteMapping("/flow/{id}/delete")
     void deleteFlow(@PathVariable  BigInteger id) { flowService.deleteFlow(id); }
+
+    @GetMapping("/flow/flowId/{flowid}")
+    List<Flow> findFlowDetailsUsingFlowId(@PathVariable("flowid") BigInteger flowId)
+    {
+        return flowService.findFlowDetailsUsingFlowId(flowId);
+    }
 
 }

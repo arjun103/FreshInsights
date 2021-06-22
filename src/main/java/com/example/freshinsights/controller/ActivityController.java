@@ -19,7 +19,7 @@ public class ActivityController
     void createactivity(@RequestBody Activity activity){
         activityService.createActivity(activity);}
 
-    @GetMapping("/activity")
+    @GetMapping("/activities")
     List<Activity> findAllActivities()
     {
         return activityService.findAllActivities();
@@ -31,9 +31,22 @@ public class ActivityController
         return activityService.findActivityByID(id);
     }
 
-    @DeleteMapping("/activity/{id}")
+    @DeleteMapping("/activity/{id}/delete")
     void deleteActivity(@PathVariable  BigInteger id)
     {
         activityService.deleteActivity(id);
+    }
+
+    @GetMapping("/activities/{activityStatus}")
+    List<Activity> findAllActivitiesByStatus(@PathVariable("activityStatus") String status)
+    {
+        if(status.equals("inprogress"))
+        {
+            return activityService.findAllActivitiesByStatus("In progress");
+        }
+        else //if(status == "completed")
+        {
+            return activityService.findAllActivitiesByStatus("Completed");
+        }
     }
 }

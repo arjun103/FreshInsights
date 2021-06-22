@@ -31,9 +31,15 @@ public class FlowStepsController
         return flowStepsService.findFlowStepsByID(id);
     }
 
-    @DeleteMapping("/flowsteps/{id}")
+    @DeleteMapping("/flowsteps/{id}/delete")
     void deleteFlowSteps(@PathVariable  BigInteger id)
     {
         flowStepsService.deleteFlowSteps(id);
+    }
+
+    @GetMapping("/flowsteps/flowId/{flowid}")
+    List<FlowSteps> findFlowStepsDetailsUsingFlowId(@PathVariable("flowid") BigInteger flowId)
+    {
+        return flowStepsService.findFlowStepsDetailsUsingFlowId(flowId);
     }
 }

@@ -24,4 +24,13 @@ public class FlowSteps
 
     @Column(name = "stepNo")
     int stepNo;
+
+    @Override
+    public String toString() {
+        return "FlowSteps{" +
+                "flowId=" + flowId +
+                ", stepDescription='" + stepDescription + '\'' +
+                ", stepNo=" + stepNo +
+                '}';
+    }
 }
