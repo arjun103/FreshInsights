@@ -1,10 +1,10 @@
 package com.example.freshinsights.controller;
 
+import com.example.freshinsights.ActivityStatus;
 import com.example.freshinsights.model.Activity;
 import com.example.freshinsights.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.math.BigInteger;
 import java.util.List;
 
@@ -14,10 +14,6 @@ public class ActivityController
 {
     @Autowired
     ActivityService activityService;
-
-    @PostMapping("/activity")
-    void createactivity(@RequestBody Activity activity){
-        activityService.createActivity(activity);}
 
     @GetMapping("/activities")
     List<Activity> findAllActivities()
@@ -37,16 +33,15 @@ public class ActivityController
         activityService.deleteActivity(id);
     }
 
-    @GetMapping("/activities/{activityStatus}")
-    List<Activity> findAllActivitiesByStatus(@PathVariable("activityStatus") String status)
+    @GetMapping("/activities/inprogress")
+    List<Activity> findAllInProgressActivities()
     {
-        if(status.equals("inprogress"))
-        {
-            return activityService.findAllActivitiesByStatus("In progress");
-        }
-        else //if(status == "completed")
-        {
-            return activityService.findAllActivitiesByStatus("Completed");
-        }
+        return activityService.findAllActivitiesByStatus(ActivityStatus.IN_PROGRESS.name());
+    }
+
+    @GetMapping("/activities/completed")
+    List<Activity> findAllCompletedActivities()
+    {
+        return activityService.findAllActivitiesByStatus(ActivityStatus.COMPLETED.name());
     }
 }

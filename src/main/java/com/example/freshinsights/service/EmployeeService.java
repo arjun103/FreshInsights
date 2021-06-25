@@ -5,7 +5,6 @@ import com.example.freshinsights.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.math.BigInteger;
 import java.util.List;
 
@@ -24,7 +23,6 @@ public class EmployeeService
         employee.setCreatedAt();
         employee.setUpdatedAt();
         employeeRepository.save(employee);
-        //System.out.println("Employee created");
     }
 
     public List<Employee> findAllEmployees()

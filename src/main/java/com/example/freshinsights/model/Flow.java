@@ -2,7 +2,6 @@ package com.example.freshinsights.model;
 
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.persistence.*;
 import java.math.BigInteger;
 
@@ -28,7 +27,8 @@ public class Flow
     BigInteger productId;
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Flow{" +
                 "flowId=" + flowId +
                 ", flowDescription='" + flowDescription + '\'' +

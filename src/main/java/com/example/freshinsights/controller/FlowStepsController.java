@@ -16,19 +16,15 @@ public class FlowStepsController
     FlowStepsService flowStepsService;
 
     @PostMapping("/flowsteps")
-    void createFlowSteps(@RequestBody FlowSteps flowSteps){
-        flowStepsService.createFlowSteps(flowSteps);}
+    void createFlowSteps(@RequestBody FlowSteps flowSteps)
+    {
+        flowStepsService.createFlowSteps(flowSteps);
+    }
 
     @GetMapping("/flowsteps")
     List<FlowSteps> findAllFlowSteps()
     {
         return flowStepsService.findAllFlowSteps();
-    }
-
-    @GetMapping("/flowsteps/{id}")
-    FlowSteps findFlowStepsByID(@PathVariable BigInteger id)
-    {
-        return flowStepsService.findFlowStepsByID(id);
     }
 
     @DeleteMapping("/flowsteps/{id}/delete")
@@ -37,8 +33,8 @@ public class FlowStepsController
         flowStepsService.deleteFlowSteps(id);
     }
 
-    @GetMapping("/flowsteps/flowId/{flowid}")
-    List<FlowSteps> findFlowStepsDetailsUsingFlowId(@PathVariable("flowid") BigInteger flowId)
+    @GetMapping("/flowsteps/{id}")
+    List<FlowSteps> findFlowStepsDetailsUsingFlowId(@PathVariable("id") BigInteger flowId)
     {
         return flowStepsService.findFlowStepsDetailsUsingFlowId(flowId);
     }

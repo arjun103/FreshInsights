@@ -1,10 +1,7 @@
 package com.example.freshinsights.listener;
 
 import com.example.freshinsights.dto.DTO;
-import com.example.freshinsights.model.Activity;
-import com.example.freshinsights.model.Flow;
-import com.example.freshinsights.model.Products;
-
+import com.example.freshinsights.model.*;
 import com.example.freshinsights.service.CustomService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -17,17 +14,18 @@ public class KafkaConsumer
     CustomService customService;
 
     DTO dto;
-    Flow flow = new Flow();
-    Products products = new Products();
 
-
-    @KafkaListener(topics = "FreshInsights", containerGroup = "group_activity", containerFactory = "activityKafkaListenerFactory")
-    public void consumeJson(Activity activity)
+    @KafkaListener(topics = "FreshInsights", containerGroup = "group_freshinsights", containerFactory = "KafkaListenerFactory")
+    public void consumeJson(Consumer consumer)
     {
-        System.out.println("Consumed JSON Message: " + activity);
-        dto = new DTO(activity, flow, products);
-        dto.setIds();
-        String message = customService.setData(dto);
+        Activity activity = new Activity();
+        Flow flow = new Flow();
+        Products products = new Products();
+        FlowSteps flowSteps = new FlowSteps();
+        System.out.println("Consumed JSON Message: " + consumer);
+        dto = new DTO(consumer, activity, flow, products, flowSteps);
+        dto.setData();
+        String message = customService.processData(dto);
         customService.printMessage(dto, message);
     }
 }

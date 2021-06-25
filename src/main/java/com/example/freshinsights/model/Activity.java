@@ -1,16 +1,11 @@
 package com.example.freshinsights.model;
 
-import com.example.freshinsights.repository.FlowStepsRepository;
-import com.example.freshinsights.service.ActivityService;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.persistence.*;
 import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
 
 @Getter
 @Setter
@@ -60,18 +55,21 @@ public class Activity
         dtf.format(updatedAt);
     }
 
-    public void setActivityStatus(String activityStatus) {
+    public void setActivityStatus(String activityStatus)
+    {
         this.activityStatus = activityStatus;
     }
 
+    @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Activity{");
-        sb.append("productId='").append(productId).append('\'');
-        sb.append(", flowId='").append(flowId).append('\'');
-        sb.append(", mailId='").append(mailId).append('\'');
-        sb.append(", activityStatus='").append(activityStatus).append('\'');
-        sb.append(", stepsCompleted='").append(stepsCompleted).append('\'');
-        sb.append('}');
-        return sb.toString();
+        return "Activity{" +
+                ", productId=" + productId +
+                ", flowId=" + flowId +
+                ", mailId='" + mailId + '\'' +
+                ", activityStatus='" + activityStatus + '\'' +
+                ", stepsCompleted=" + stepsCompleted +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }

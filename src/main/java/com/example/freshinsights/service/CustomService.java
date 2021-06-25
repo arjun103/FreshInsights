@@ -1,6 +1,8 @@
 package com.example.freshinsights.service;
 
+import com.example.freshinsights.ActivityStatus;
 import com.example.freshinsights.dto.DTO;
+import com.example.freshinsights.model.Activity;
 import com.example.freshinsights.model.Flow;
 import com.example.freshinsights.model.FlowSteps;
 import com.example.freshinsights.model.Products;
@@ -9,18 +11,24 @@ import com.example.freshinsights.repository.FlowRepository;
 import com.example.freshinsights.repository.FlowStepsRepository;
 import com.example.freshinsights.repository.ProductsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Service
-public class CustomService {
+public class CustomService
+{
+    String string;
+    String to;
 
-    List<Products> productsList;
-    List<Flow> flowList;
-    List<FlowSteps> flowStepsList;
-    List<List<String>> list = new ArrayList<>();
+    Products products = new Products();
+    Flow flow = new Flow();
+    FlowSteps flowSteps = new FlowSteps();
+    Activity activity = new Activity();
+
+    @Autowired
+    JavaMailSender mailSender;
 
     @Autowired
     ProductsRepository productsRepository;
@@ -34,7 +42,7 @@ public class CustomService {
     @Autowired
     ActivityRepository activityRepository;
 
-    public String setData(DTO dto)
+    public String processData(DTO dto)
     {
 
         if(!productsRepository.existsById(dto.getProducts().getProductId()))
@@ -45,91 +53,84 @@ public class CustomService {
         {
             System.out.println("Given productId exists");
         }
-        if(!flowRepository.existsById(dto.getFlow().getFlowId()))
+
+        products = productsRepository.findProductDeatilsUsingId(dto.getProducts().getProductId());
+        flow = flowRepository.findFlowDetailsUsingCustomDetails(dto.getFlow().getProductId(), dto.getFlowSteps().getStepDescription());
+        flowSteps = flowStepsRepository.findFlowStepsDetailsUsingCustomDetails(dto.getFlow().getProductId(), dto.getFlowSteps().getStepDescription());
+
+        dto.getProducts().setProductName(products.getProductName());
+
+        dto.getFlow().setFlowId(flow.getFlowId());
+        dto.getFlow().setFlowDescription(flow.getFlowDescription());
+        dto.getFlow().setTotalSteps(flow.getTotalSteps());
+
+        dto.getFlowSteps().setStepNo(flowSteps.getStepNo());
+        dto.getFlowSteps().setFlowId(flowSteps.getFlowId());
+
+        dto.getActivity().setFlowId(flow.getFlowId());
+        dto.getActivity().setStepsCompleted(flowSteps.getStepNo());
+
+        if(dto.getFlowSteps().getStepNo() == 1)
         {
-            return "Invalid flowId";
+            dto.getActivity().setCreatedAt();
+            dto.getActivity().setUpdatedAt();
+            dto.getActivity().setActivityStatus(ActivityStatus.IN_PROGRESS.name());
+            activityRepository.save(dto.getActivity());
+            return "Unsuccessful completion";
+
         }
-        else
+        else if(dto.getFlow().getTotalSteps() == dto.getFlowSteps().getStepNo())
         {
-            System.out.println("Given flowId exists");
-        }
-
-        productsList = productsRepository.findProductDeatilsUsingId(dto.getProducts().getProductId());
-        flowList = flowRepository.findFlowDetailsUsingFlowId(dto.getFlow().getFlowId());
-        flowStepsList = flowStepsRepository.findFlowStepsDetailsUsingFlowId(dto.getFlow().getFlowId());
-
-        dto.getProducts().setProductName(productsList.get(0).getProductName());
-
-        dto.getFlow().setFlowDescription(flowList.get(0).getFlowDescription());
-        dto.getFlow().setTotalSteps(flowList.get(0).getTotalSteps());
-
-        if(dto.getFlow().getTotalSteps() < dto.getActivity().getStepsCompleted())
-        {
-            return "Invalid stepsCompleted";
-        }
-
-        else if(dto.getFlow().getTotalSteps() == dto.getActivity().getStepsCompleted())
-        {
+            activity = activityRepository.findActivityDetailsByCustom(dto.getActivity().getProductId(), dto.getActivity().getFlowId(), dto.getActivity().getStepsCompleted()-1);
+            activity.setUpdatedAt();
+            activity.setStepsCompleted(dto.getFlowSteps().getStepNo());
+            activity.setActivityStatus(ActivityStatus.COMPLETED.name());
+            activityRepository.save(activity);
             return "Successful completion";
         }
-
         else
         {
-            for (FlowSteps flowSteps : flowStepsList) {
-                List<String> temp = new ArrayList<>();
-                temp.add(flowSteps.getStepDescription());
-                temp.add(Integer.toString(flowSteps.getStepNo()));
-                list.add(temp);
-            }
-            return "True";
+            activity = activityRepository.findActivityDetailsByCustom(dto.getActivity().getProductId(), dto.getActivity().getFlowId(), dto.getActivity().getStepsCompleted()-1);
+            activity.setUpdatedAt();
+            activity.setStepsCompleted(dto.getFlowSteps().getStepNo());
+            activityRepository.save(activity);
+            return "Unsuccessful completion";
+
         }
     }
 
     public void printMessage(DTO dto, String message)
     {
-
         switch(message)
         {
             case "Invalid productId" :
                 System.out.println("INVALID INPUT : Given productId does not exist"); break;
 
-            case "Invalid flowId" :
-                System.out.println("INVALID INPUT : Given flowId does not exist"); break;
-
-            case "Invalid stepsCompleted" :
-                System.out.println("INVALID INPUT : Given stepsCompleted exceeds the totalSteps of the flow " + dto.getFlow().getFlowDescription() + " of the product " + dto.getProducts().getProductName() + " for the user " + dto.getActivity().getMailId());
-                break;
+            case "Invalid record":
+                System.out.println("INVALID INPUT : FlowSteps/Event continuity not maintained. Multiple record(s) skipped...");
 
             case "Successful completion" :
-                dto.getActivity().setCreatedAt();
-                dto.getActivity().setUpdatedAt();
-                dto.getActivity().setActivityStatus("Completed");
-                activityRepository.save(dto.getActivity());
-                System.out.println("ACTIVITY STATUS : " + dto.getActivity().getActivityStatus());
-                System.out.println("Message : " + dto.getActivity().getMailId() + " has successfully completed the " + dto.getFlow().getFlowDescription() + " for the product : " + dto.getProducts().getProductName());
+                string = "Message : " + dto.getActivity().getMailId() + " has successfully completed the " + dto.getFlow().getFlowDescription() + " for the product : " + dto.getProducts().getProductName();
+                System.out.println(string);
+//                sendMail(dto, string, "Successful flow completion");
                 break;
 
-            case "True" :
-                dto.getActivity().setCreatedAt();
-                dto.getActivity().setUpdatedAt();
-                dto.getActivity().setActivityStatus("In progress");
-                activityRepository.save(dto.getActivity());
-                System.out.println("ACTIVITY STATUS : " + dto.getActivity().getActivityStatus());
-                System.out.println("Message : " + dto.getActivity().getMailId() + " has not completed the " + dto.getFlow().getFlowDescription() + " for the product : " + dto.getProducts().getProductName());
-
-                System.out.println("--------STEP COMPLETED--------");
-                for(int i = 0; i<dto.getActivity().getStepsCompleted(); i++)
-                {
-                    System.out.println("STEP DESCRIPTION : " + list.get(i).get(0));
-                    System.out.println("STEP NUMBER      : " + list.get(i).get(1));
-                }
-
-                System.out.println("-----STEP TO BE COMPLETED-----");
-                for(int i = dto.getActivity().getStepsCompleted(); i < list.size(); i++)
-                {
-                    System.out.println("STEP DESCRIPTION : " + list.get(i).get(0));
-                    System.out.println("STEP NUMBER      : " + list.get(i).get(1));
-                }
+            case "Unsuccessful completion" :
+                string = "Message : " + dto.getActivity().getMailId() + " has not completed the " + dto.getFlow().getFlowDescription() + " for the product : " + dto.getProducts().getProductName();
+                System.out.println(string);
+//                sendMail(dto, string, "Unsuccessful flow completion");
+                break;
         }
+    }
+
+    @Scheduled(fixedRate = 60000)
+    public void sendMail(DTO dto, String string, String sub)
+    {
+        SimpleMailMessage mailMessage = new SimpleMailMessage();
+        to = dto.getActivity().getMailId();
+        mailMessage.setTo(to);
+        mailMessage.setSubject(sub);
+        mailMessage.setText(string);
+        mailSender.send(mailMessage);
     }
 }

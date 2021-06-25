@@ -2,7 +2,6 @@ package com.example.freshinsights.model;
 
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.persistence.*;
 import java.math.BigInteger;
 
@@ -21,7 +20,8 @@ public class Products
     String productName;
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "Products{" +
                 "productId=" + productId +
                 ", productName='" + productName + '\'' +
