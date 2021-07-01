@@ -16,11 +16,14 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class CustomService
 {
     String string;
     String to;
+    List<Activity> activityList;
 
     Products products = new Products();
     Flow flow = new Flow();
@@ -72,6 +75,12 @@ public class CustomService
 
         if(dto.getFlowSteps().getStepNo() == 1)
         {
+            activityList = activityRepository.findActivityDetailsByCustom(dto.getActivity().getProductId(), dto.getActivity().getFlowId(), dto.getActivity().getMailId(), ActivityStatus.IN_PROGRESS.name());
+            for(Activity activity : activityList)
+            {
+                System.out.println(activity);
+                activityRepository.deleteById(activity.getId());
+            }
             dto.getActivity().setCreatedAt();
             dto.getActivity().setUpdatedAt();
             dto.getActivity().setActivityStatus(ActivityStatus.IN_PROGRESS.name());
@@ -81,7 +90,7 @@ public class CustomService
         }
         else if(dto.getFlow().getTotalSteps() == dto.getFlowSteps().getStepNo())
         {
-            activity = activityRepository.findActivityDetailsByCustom(dto.getActivity().getProductId(), dto.getActivity().getFlowId(), dto.getActivity().getStepsCompleted()-1);
+            activity = activityRepository.findActivityDetailsByCustom(dto.getActivity().getProductId(), dto.getActivity().getFlowId(), dto.getActivity().getStepsCompleted()-1, dto.getActivity().getMailId());
             activity.setUpdatedAt();
             activity.setStepsCompleted(dto.getFlowSteps().getStepNo());
             activity.setActivityStatus(ActivityStatus.COMPLETED.name());
@@ -90,7 +99,7 @@ public class CustomService
         }
         else
         {
-            activity = activityRepository.findActivityDetailsByCustom(dto.getActivity().getProductId(), dto.getActivity().getFlowId(), dto.getActivity().getStepsCompleted()-1);
+            activity = activityRepository.findActivityDetailsByCustom(dto.getActivity().getProductId(), dto.getActivity().getFlowId(), dto.getActivity().getStepsCompleted()-1, dto.getActivity().getMailId());
             activity.setUpdatedAt();
             activity.setStepsCompleted(dto.getFlowSteps().getStepNo());
             activityRepository.save(activity);
